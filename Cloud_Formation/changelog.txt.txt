@@ -1,0 +1,11 @@
+V.1.0 -> Initial Commit
+V.1.1 -> Added Support for DRUSH and Memcached in single machine 
+         Support for DRUSH is via composer - (Need a sample composer.json file) 
+         Support for DRUSH via PEAR is still there but commented out. 
+
+TODO: 
+	Separate Memcache into separate machine
+	Add support for EFS?? 
+	Varnish
+	Nagios
+	TEST LIKE MAD..... 
