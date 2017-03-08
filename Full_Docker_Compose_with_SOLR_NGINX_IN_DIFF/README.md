@@ -1,13 +1,8 @@
-# Docker-based Drupal environment for local development
-
-[![Documentation Status](https://readthedocs.org/projects/docker4drupal/badge/?version=latest)](http://docs.docker4drupal.org)
-[![Build Status](https://travis-ci.org/wodby/docker4drupal.svg?branch=master)](https://travis-ci.org/wodby/docker4drupal)
-
-[![Wodby Slack](https://www.google.com/s2/favicons?domain=www.slack.com) Join us on Slack](https://slack.wodby.com/)
+﻿# Docker-based Drupal environment
 
 ## Introduction
 
-Docker4Drupal is a set of docker images optimized for local development with Drupal. Use docker-compose.yml file from this repository to spin up local environment on Linux, Mac OS X and Windows. 
+Docker4Drupal is a set of docker images for Drupal. Use docker-compose.yml file from this repository to spin up local environment on Linux, Mac OS X and Windows. 
 
 Read [**Getting Started**](http://docs.docker4drupal.org/en/latest/).
 
@@ -35,10 +30,3 @@ Supported Drupal versions: 6/7/8.
 
 Full documentation is available at http://docs.docker4drupal.org/.
 
-## Using in Production
-
-Deploy docker-based infrastructure for Drupal to your own server via [![Wodby](https://www.google.com/s2/favicons?domain=wodby.com) Wodby](https://wodby.com).
-
-## License
-
-This project is licensed under the MIT open source license.
