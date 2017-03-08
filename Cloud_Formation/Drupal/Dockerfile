@@ -3,19 +3,11 @@ MAINTAINER Seshagiri Sriram (SeshagiriSriram@gmail.com)
 
 #Added support for DRUSH and Memcached in single machine...
 
-#Prevent daemon start during install
-RUN	echo '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d && chmod +x /usr/sbin/policy-rc.d
-
-#Supervisord
-RUN apt-get update &&  apt-get install -y supervisor && mkdir -p /var/log/supervisor
-&& rm -rf /var/lib/apt/lists/*
-CMD ["/usr/bin/supervisord", "-n"]
-
 # Add support for SSHD 
 RUN apt-get update && apt-get install -y unzip \
   && apt-get install -y openssh-server 
   && mkdir /var/run/sshd 
-  && echo 'root:root' |chpasswd
+  && echo 'root:someunknownpassword' |chpasswd
   && rm -rf /var/lib/apt/lists/*
 
 # Create the sites/default/files folder so Drupal can write caches to it

@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Custom VPC and Multi-AZ stack for Drupal 7 with MySQL DB, redis and EFS
+Description: Custom VPC and Multi-AZ stack for Drupal 7 with MySQL DB, memcached and EFS
   file storage. This stack uses a realistic example Drupal site, hosted on Github
   and Docker hub. For more information see https://github.com/karelbemelmans/drupal7-on-aws/
 
@@ -406,8 +406,8 @@ Resources:
     Properties:
       CacheNodeType: cache.t1.micro
       AutoMinorVersionUpgrade: 'true'
-      Engine: redis
-      NumCacheNodes: '1'
+      Engine: memcached
+      NumCacheNodes: '2'
       VpcSecurityGroupIds:
       - !Ref DrupalElasticacheSecurityGroup
       CacheSubnetGroupName: !Ref DrupalElasticacheSubnetGroup
@@ -640,15 +640,15 @@ Resources:
                       DRUPAL_DB_USER: ${DbMasterUsername}
                       DRUPAL_DB_PASS: ${DbMasterPassword}
                       DRUPAL_DB_HOST: ${DrupalDb.Endpoint.Address}
-                      DRUPAL_REDIS_HOST: ${DrupalElasticacheCluster.RedisEndpoint.Address}
-                      DRUPAL_REDIS_POST: ${DrupalElasticacheCluster.RedisEndpoint.Port}
+                      DRUPAL_MEMCACHED_HOST: ${DrupalElasticacheCluster.MemcachedEndpoint.Address}
+                      DRUPAL_MEMCACHED_PORT: ${DrupalElasticacheCluster.MemcachedEndpoint.Port}
                     logging:
                       driver: syslog
                       options:
                         syslog-address: ${SyslogDestination}
                     volumes:
                       - /${MountPoint}/drupal-data:/var/www/html/sites/default/files
-                      - /${MountPoint}/drupal-private:/data/privat
+                      - /${MountPoint}/drupal-private:/data/private
 
               mode: '000644'
               owner: root
