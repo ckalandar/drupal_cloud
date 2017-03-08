@@ -1,8 +1,11 @@
-V.1.0 -> Initial Commit
-V.1.1 -> Added Support for DRUSH and Memcached in single machine 
+V1.0 -> Initial Commit
+V1.1 -> Added Support for DRUSH and Memcached in single machine 
          Support for DRUSH is via composer - (Need a sample composer.json file) 
          Support for DRUSH via PEAR is still there but commented out. 
-V.1.2 -> Added support for Memcached via cloud formation. 
+V1.2 -> Added support for Memcached via cloud formation.
+V1.3 -> Added docker files for Nagios and Solr
+        Add all in all docker file with solr/inbuilt and NGINX
+		TODO: Remove NGINX and install Apache instead. 
 	 
 
 TODO: 
