@@ -1,0 +1,42 @@
+version: '2'
+services:
+  db:
+    image: mysql:latest
+    volumes:
+      - "/var/lib/mysql:/var/lib/mysql"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: some_password
+      MYSQL_DATABASE: drupal
+      MYSQL_USER: drupal
+      MYSQL_PASSWORD: drupal
+  redis:
+    image: redis:3.0
+    ports:
+    - "6379"
+  drupal:
+    image: drupal:8.2-apache
+    volumes:
+      - /var/www/html/modules
+      - /var/www/html/profiles
+      - /var/www/html/themes
+    restart: always
+    ports:
+      - "8000:80"
+    environment:
+      MYSQL_ROOT_PASSWORD: somepassword
+      MYSQL_DATABASE: drupal
+      MYSQL_USER: drupal
+      MYSQL_PASSWORD: drupal
+    links:
+      - db
+      - redis
+  varnish:
+    image: eeacms/varnish
+    ports:
+    - "80:80"
+    depends_on:
+    - drupal
+    environment:
+      DNS_ENABLED: "true"
+      BACKENDS: "drupal"

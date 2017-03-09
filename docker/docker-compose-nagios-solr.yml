@@ -1,0 +1,10 @@
+version: '2'
+services:
+  nagios:
+    build:
+      context: ./nagios 
+      dockerfile: Dockerfile
+  solr:
+    build:
+      context: ./solr/6.4
+    command: ./solr/build-all.sh 
