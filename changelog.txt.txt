@@ -8,6 +8,8 @@ V1.0.3 -> Added docker files for Nagios and Solr
 		TODO: Remove NGINX and install Apache instead. 
 V1.0.3.1 -> Misc change to documentation
 V1.0.4   -> Fixed Changes for Varnish.. Updated Documentation
+V1.0.5   -> Added CF templates
+V1.0.6   -> Updated this file and added git
 
 TODO: 
 	Automate the install and links and auto generate the link files.. 
