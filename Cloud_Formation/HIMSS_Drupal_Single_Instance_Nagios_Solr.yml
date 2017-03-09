@@ -87,6 +87,7 @@ Resources:
           packages:
             yum:
               docker: []
+              git: [] 
           commands:
             10_install_docker_compose:
               command: !Sub |
