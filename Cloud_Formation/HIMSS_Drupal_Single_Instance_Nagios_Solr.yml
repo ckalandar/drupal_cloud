@@ -1,0 +1,189 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  HiMSS Development environment Template Drupal_Single_Instance:
+  Drupal is web software you can use to create a beautiful website or blog.
+  This template installs a single-instance Drupal deployment using a local
+  MySQL database to store the data.
+Parameters:
+  KeyPairName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instances
+    Type: AWS::EC2::KeyPair::KeyName
+  InstanceType:
+    Description: WebServer EC2 instance type
+    Type: String
+    Default: m1.small
+    AllowedValues: [t1.micro, t2.micro, t2.small, t2.medium, m1.small, m1.medium, m1.large, m1.xlarge, m2.xlarge, m2.2xlarge, m2.4xlarge, m3.medium, m3.large, m3.xlarge, m3.2xlarge, c1.medium, c1.xlarge, c3.large, c3.xlarge, c3.2xlarge, c3.4xlarge, c3.8xlarge, g2.2xlarge, r3.large, r3.xlarge, r3.2xlarge, r3.4xlarge, r3.8xlarge, i2.xlarge, i2.2xlarge, i2.4xlarge, i2.8xlarge, hi1.4xlarge, hs1.8xlarge, cr1.8xlarge, cc2.8xlarge, cg1.4xlarge]
+    ConstraintDescription: must be a m3.large or m4.large instance type
+   SSHAddress:
+    Description: "The IP address range that can be used to SSH to the EC2 instances"
+    Type: String
+    MinLength: 9
+    MaxLength: 18
+    Default: "0.0.0.0/0"
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
+  DockerImage:
+    Description: Name of the Docker image that contains the Drupal 7 website.
+    Type: String
+    Default: ittb/d7-docker-v1    
+Mappings:
+  AWSInstanceType2Arch:  {
+        t1.micro    : { Arch : PV64   },
+        t2.micro    : { Arch : HVM64  },
+        t2.small    : { Arch : HVM64  },
+        t2.medium   : { Arch : HVM64  },
+        m1.small    : { Arch : PV64   },
+        m1.medium   : { Arch : PV64   },
+        m1.large    : { Arch : PV64   },
+        m1.xlarge   : { Arch : PV64   },
+        m2.xlarge   : { Arch : PV64   },
+        m2.2xlarge  : { Arch : PV64   },
+        m2.4xlarge  : { Arch : PV64   },
+        m3.medium   : { Arch : HVM64  },
+        m3.large    : { Arch : HVM64  },
+        m3.xlarge   : { Arch : HVM64  },
+        m3.2xlarge  : { Arch : HVM64  },
+        c1.medium   : { Arch : PV64   },
+        c1.xlarge   : { Arch : PV64   },
+        c3.large    : { Arch : HVM64  },
+        c3.xlarge   : { Arch : HVM64  },
+        c3.2xlarge  : { Arch : HVM64  },
+        c3.4xlarge  : { Arch : HVM64  },
+        c3.8xlarge  : { Arch : HVM64  },
+        g2.2xlarge  : { Arch : HVMG2  },
+        r3.large    : { Arch : HVM64  },
+        r3.xlarge   : { Arch : HVM64  },
+        r3.2xlarge  : { Arch : HVM64  },
+        r3.4xlarge  : { Arch : HVM64  },
+        r3.8xlarge  : { Arch : HVM64  },
+        i2.xlarge   : { Arch : HVM64  },
+        i2.2xlarge  : { Arch : HVM64  },
+        i2.4xlarge  : { Arch : HVM64  },
+        i2.8xlarge  : { Arch : HVM64  },
+        hi1.4xlarge : { Arch : HVM64  },
+        hs1.8xlarge : { Arch : HVM64  },
+        cr1.8xlarge : { Arch : HVM64  },
+        cc2.8xlarge : { Arch : HVM64  }
+    }
+  AWSRegionArch2AMI: {
+        us-east-1      : { PV64 : ami-50842d38, HVM64 : ami-08842d60, HVMG2 : ami-3a329952  },
+        us-west-2      : { PV64 : ami-af86c69f, HVM64 : ami-8786c6b7, HVMG2 : ami-47296a77  },
+        us-west-1      : { PV64 : ami-c7a8a182, HVM64 : ami-cfa8a18a, HVMG2 : ami-331b1376  },
+        eu-west-1      : { PV64 : ami-aa8f28dd, HVM64 : ami-748e2903, HVMG2 : ami-00913777  },
+        ap-southeast-1 : { PV64 : ami-20e1c572, HVM64 : ami-d6e1c584, HVMG2 : ami-fabe9aa8  },
+        ap-northeast-1 : { PV64 : ami-21072820, HVM64 : ami-35072834, HVMG2 : ami-5dd1ff5c  },
+        ap-southeast-2 : { PV64 : ami-8b4724b1, HVM64 : ami-fd4724c7, HVMG2 : ami-e98ae9d3  },
+        sa-east-1      : { PV64 : ami-9d6cc680, HVM64 : ami-956cc688, HVMG2 : NOT_SUPPORTED },
+        cn-north-1     : { PV64 : ami-a857c591, HVM64 : ami-ac57c595, HVMG2 : NOT_SUPPORTED },
+        eu-central-1   : { PV64 : ami-a03503bd, HVM64 : ami-b43503a9, HVMG2 : ami-b03503ad  }
+    }   
+
+Resources:
+  WebServer:
+    Type: AWS::EC2::Instance
+    Metadata:
+      AWS::CloudFormation::Init:
+        config:
+          packages:
+            yum:
+              docker: []
+          commands:
+            10_install_docker_compose:
+              command: !Sub |
+                curl -L https://github.com/docker/compose/releases/download/1.7.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+                chmod +x /usr/local/bin/docker-compose
+          services:
+            sysvinit:
+              docker:
+                enabled: 'true'
+                ensureRunning: 'true'
+                packages:
+                  yum:
+                  - docker
+        run:
+          files:
+            "/tmp/docker-compose.yml":
+              content: !Sub |
+                version: '2'
+                services:
+                  nagios:
+                    build:
+                      context: ./nagios 
+                      dockerfile: Dockerfile
+                  solr:
+                    build:
+                     context: ./solr/6.4
+                    command: ./solr/build-all.sh 
+
+              mode: '000644'
+              owner: root
+              group: root
+
+            "/etc/cfn/cfn-hup.conf":
+              content: !Sub |
+                [main]
+                stack= ${AWS::StackId}
+                region= ${AWS::Region}
+              mode: '000400'
+              owner: root
+              group: root
+
+            "/etc/cfn/hooks.d/cfn-auto-reloader.conf":
+              content: !Sub |
+                [cfn-auto-reloader-hook]
+                triggers=post.update
+                path=Resources.LaunchConfigurationForDrupalWebServer.Metadata.AWS::CloudFormation::Init
+                action=/opt/aws/bin/cfn-init -v \
+                  --stack ${AWS::StackName} \
+                  --resource LaunchConfigurationForDrupalWebServer \
+                  --configsets reload_drupal \
+                  --region ${AWS::Region}
+                runas=root
+
+          services:
+            sysvinit:
+              cfn-hup:
+                enabled: 'true'
+                ensureRunning: 'true'
+                files:
+                - "/etc/cfn/cfn-hup.conf"
+                - "/etc/cfn/hooks.d/cfn-auto-reloader.conf"
+
+          commands:
+            10_compose_build:
+              command: "/usr/local/bin/docker-compose build"
+              cwd: "/tmp"
+            20_compose_up:
+              command: "/usr/local/bin/docker-compose up -d"
+              cwd: "/tmp"
+           
+    Properties:
+      ImageId: 
+        "Fn::FindInMap":
+            - AWSRegionArch2AMI
+            - Ref: AWS::Region
+            - "Fn::FindInMap":
+                - AWSInstanceType2Arch
+                - Ref: InstanceType
+                - Arch
+      InstanceType: {Ref: InstanceType}
+      KeyName: {Ref: KeyPairName}
+  InstanceSecurityGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: Enable SSH access via port 22
+            SecurityGroupIngress:
+                - IpProtocol: tcp
+                  FromPort: 22
+                  ToPort: 22
+                  CidrIp: 0.0.0.0/0
+
+Outputs:
+  WebsiteURL:
+    Value:
+      Fn::Join:
+      - ''
+      - - http://
+        - Fn::GetAtt: [WebServer, PublicIp]
+        - /wordpress
+    Description: URL for Nagios/Solr

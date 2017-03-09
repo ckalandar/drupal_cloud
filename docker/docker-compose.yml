@@ -15,7 +15,7 @@ services:
     ports:
     - "6379"
   drupal:
-    image: drupal:8.2-apache
+    image: drupal:7.54-apache
     volumes:
       - /var/www/html/modules
       - /var/www/html/profiles
