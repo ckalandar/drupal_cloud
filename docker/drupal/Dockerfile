@@ -27,7 +27,7 @@ apt-key list > /dev/null
 #RUN apt-get update && apt-get install -y git mysql-community-client
 RUN apt-get update && apt-get install -y git
 #RUN mysql -u root --password=$MYSQL_ROOT_PASSWORD --host=$MYSQL_HOST -e "drop database drupal; CREATE DATABASE drupal; GRANT ALL ON drupal.* TO 'drupal'@'%';"
-RUN /root/.composer/vendor/bin/drush si standard -y --db-url=mysql://drupal:drupal@172.17.0.2/drupal
+#RUN /root/.composer/vendor/bin/drush si standard -y --db-url=mysql://drupal:drupal@172.17.0.2/drupal
 #ADD settings.php.default /tmp
 #ADD runcode.sh /tmp 
 #ADD docker-php-entrypoint /usr/local/bin

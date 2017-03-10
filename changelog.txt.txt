@@ -10,6 +10,8 @@ V1.0.3.1 -> Misc change to documentation
 V1.0.4   -> Fixed Changes for Varnish.. Updated Documentation
 V1.0.5   -> Added CF templates
 V1.0.6   -> Updated this file and added git
+V1.0.7   -> Updated this file and added git support for MYSQL, NAgios and Solr and
+            added support for backends via dockerfile for Varnish
 
 TODO: 
 	Automate the install and links and auto generate the link files.. 
