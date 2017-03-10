@@ -1,7 +1,9 @@
 version: '2'
 services:
   db:
-    image: mysql:latest
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
     volumes:
       - "/var/lib/mysql:/var/lib/mysql"
     restart: always
@@ -14,8 +16,12 @@ services:
     image: redis:3.0
     ports:
     - "6379"
+    depends_on:
+    - db
   drupal:
-    image: drupal:7.54-apache
+    build:
+      context: ./drupal
+      dockerfile: Dockerfile
     volumes:
       - /var/www/html/modules
       - /var/www/html/profiles
@@ -38,5 +44,5 @@ services:
     depends_on:
     - drupal
     environment:
-      DNS_ENABLED: "true"
-      BACKENDS: "drupal"
+      DNS_ENABLED: "false"
+      BACKENDS: "172.19.0.4:8000"

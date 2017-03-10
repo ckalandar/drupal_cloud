@@ -21,8 +21,6 @@ gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
 gpg --export "$key" > /etc/apt/trusted.gpg.d/mysql.gpg; \
 rm -r "$GNUPGHOME"; \
 apt-key list > /dev/null
-
-
 #RUN echo "deb http://repo.mysql.com/apt/debian/ jessie mysql-${MYSQL_MAJOR}" > /etc/apt/sources.list.d/mysql.list
 #RUN apt-get update && apt-get install -y git mysql-community-client
 RUN apt-get update && apt-get install -y git
