@@ -12,7 +12,13 @@ V1.0.5   -> Added CF templates
 V1.0.6   -> Updated this file and added git
 V1.0.7   -> Updated this file and added git support for MYSQL, NAgios and Solr and
             added support for backends via dockerfile for Varnish
+V1.0.8   -> Simplified solr - simple docker file 
+            to run code, just run docker-compose -f docker-compose-nagios-solr.yml up d 
+            Default solr port: 8983, Nagios user name/password: nagiosadmin/nagios 
 
 TODO: 
 	Automate the install and links and auto generate the link files.. 
 	TEST LIKE MAD..... 
+Issues: 
+	Varnish connects but fails to connect to backend. 
+        Template does not work. 

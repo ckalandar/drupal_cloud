@@ -38,7 +38,9 @@ services:
       - db
       - redis
   varnish:
-    image: eeacms/varnish
+    build:
+      context: ./varnish
+      dockerfile: Dockerfile
     ports:
     - "80:80"
     depends_on:

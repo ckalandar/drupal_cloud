@@ -4,7 +4,11 @@ services:
     build:
       context: ./nagios 
       dockerfile: Dockerfile
+    ports:
+    - "80:80"
   solr:
     build:
-      context: ./solr/6.4
-    command: ./solr/build-all.sh 
+      context: ./solr
+      dockerfile: Dockerfile
+    ports:
+    - "8983:8983"

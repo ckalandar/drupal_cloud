@@ -142,8 +142,8 @@ RUN cd /opt &&		\
 	git clone https://github.com/willixix/naglio-plugins.git	WL-Nagios-Plugins	&&	\
 	git clone https://github.com/JasonRivers/nagios-plugins.git	JR-Nagios-Plugins	&&	\
 	git clone https://github.com/justintime/nagios-plugins.git      JE-Nagios-Plugins       &&      \
-	chmod +x /opt/WL-Nagios-Plugins/check*                                                  &&      \
-	chmod +x /opt/JE-Nagios-Plugins/check_mem/check_mem.pl                                  &&      \
+	chmod -R +x /opt/WL-Nagios-Plugins/check*                                                  &&      \
+	chmod -R +x /opt/JE-Nagios-Plugins/check_mem/check_mem.pl                                  &&      \
 	cp /opt/JE-Nagios-Plugins/check_mem/check_mem.pl /opt/nagios/libexec/                   &&      \
 	cp /opt/nagios/libexec/utils.sh /opt/JR-Nagios-Plugins/
 
@@ -193,7 +193,8 @@ ADD nagios.init /etc/sv/nagios/run
 ADD apache.init /etc/sv/apache/run
 ADD postfix.init /etc/sv/postfix/run
 ADD start.sh /usr/local/bin/start_nagios
-RUN chmod +x /usr/local/bin/start_nagios
+RUN chmod -R +x /usr/local/bin/start_nagios
+RUN chmod -R +x /etc/sv
 
 # enable all runit services
 RUN ln -s /etc/sv/* /etc/service
