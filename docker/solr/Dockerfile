@@ -1,2 +1,2 @@
 FROM solr:latest
-MAINTAINER Seshagiri Sriram (SeshagiriSriram@gmail.com)
+MAINTAINER Maintained by IT Trailblazers

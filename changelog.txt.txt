@@ -14,7 +14,10 @@ V1.0.7   -> Updated this file and added git support for MYSQL, NAgios and Solr a
             added support for backends via dockerfile for Varnish
 V1.0.8   -> Simplified solr - simple docker file 
             to run code, just run docker-compose -f docker-compose-nagios-solr.yml up d 
-            Default solr port: 8983, Nagios user name/password: nagiosadmin/nagios 
+            Default solr port: 8983, Nagios user name/password: nagiosadmin/nagios
+V1.0.9   -> Minor fixes for Mysql default password and startng Varnish no
+matter what
+	    
 
 TODO: 
 	Automate the install and links and auto generate the link files.. 

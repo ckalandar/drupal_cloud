@@ -30,7 +30,7 @@ services:
     ports:
       - "8000:80"
     environment:
-      MYSQL_ROOT_PASSWORD: somepassword
+      MYSQL_ROOT_PASSWORD: some_password
       MYSQL_DATABASE: drupal
       MYSQL_USER: drupal
       MYSQL_PASSWORD: drupal
@@ -45,6 +45,3 @@ services:
     - "80:80"
     depends_on:
     - drupal
-    environment:
-      DNS_ENABLED: "false"
-      BACKENDS: "172.19.0.4:8000"

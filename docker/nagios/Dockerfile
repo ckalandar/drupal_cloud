@@ -1,5 +1,5 @@
 FROM ubuntu:16.04
-MAINTAINER Seshagiri Sriram (SeshagiriSriram@gmail.com)
+MAINTAINER Maintained by IT Trailblazers
 
 ENV NAGIOS_HOME			/opt/nagios
 ENV NAGIOS_USER			nagios
