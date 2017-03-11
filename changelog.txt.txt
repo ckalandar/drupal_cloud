@@ -16,7 +16,7 @@ V1.0.8   -> Simplified solr - simple docker file
             to run code, just run docker-compose -f docker-compose-nagios-solr.yml up d 
             Default solr port: 8983, Nagios user name/password: nagiosadmin/nagios
 V1.0.9   -> Minor fixes for Mysql default password and startng Varnish no
-matter what
+V1.0.9.1 -> Fixed docker-compose.yml
 	    
 
 TODO: 
