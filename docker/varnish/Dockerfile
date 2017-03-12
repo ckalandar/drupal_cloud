@@ -4,5 +4,11 @@ MAINTAINER Maintained by IT Trailblazers
 #ENV ADMIN_PORT 6082 
 #ENV DNS_ENABLED false 
 #ENV BACKENDS ec2-52-77-233-238.ap-southeast-1.compute.amazonaws.com:8000
+RUN set -ex \
+&& buildDeps=' \
+git \
+vim \
+' \
+&& apt-get update && apt-get install -y --no-install-recommends $buildDeps && rm -rf /var/lib/apt/lists/* 
 EXPOSE 6081
 COPY default.vcl /etc/varnish/default.vcl

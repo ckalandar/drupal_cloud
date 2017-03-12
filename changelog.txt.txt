@@ -17,11 +17,14 @@ V1.0.8   -> Simplified solr - simple docker file
             Default solr port: 8983, Nagios user name/password: nagiosadmin/nagios
 V1.0.9   -> Minor fixes for Mysql default password and startng Varnish no
 V1.0.9.1 -> Fixed docker-compose.yml
+V1.1.0   -> added vim to drupal/varnish containers
 	    
 
 TODO: 
 	Automate the install and links and auto generate the link files.. 
-	TEST LIKE MAD..... 
+        add volumes to mysql and drupal as per Neal 
+        Re-test Varnish
+	Add CF templates
 Issues: 
 	Varnish connects but fails to connect to backend. 
         Template does not work. 

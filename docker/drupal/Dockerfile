@@ -18,6 +18,7 @@ libjpeg62-turbo-dev \
 libpng12-dev \
 libpq-dev \
 git \
+vim \
 ' \
 && apt-get update && apt-get install -y --no-install-recommends $buildDeps && rm -rf /var/lib/apt/lists/* \
 && docker-php-ext-configure gd \
