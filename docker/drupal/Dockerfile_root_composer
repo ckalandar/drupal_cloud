@@ -17,6 +17,8 @@ RUN set -ex \
 libjpeg62-turbo-dev \
 libpng12-dev \
 libpq-dev \
+git \
+vim \
 ' \
 && apt-get update && apt-get install -y --no-install-recommends $buildDeps && rm -rf /var/lib/apt/lists/* \
 && docker-php-ext-configure gd \
@@ -28,11 +30,9 @@ libpq-dev \
 && apt-mark manual \
 libjpeg62-turbo \
 libpq5 \
-&& apt-get update && apt-get install -y git vim  \
 && apt-get purge -y --auto-remove $buildDeps
 
-#The following has been changed to /tmp to keep /var/www/html empty.. 
-WORKDIR /tmp/html
+WORKDIR /var/www/html
 
 # https://www.drupal.org/node/3060/release
 ENV DRUPAL_VERSION 7.54
@@ -51,21 +51,7 @@ RUN php composer-setup.php && php -r "unlink('composer-setup.php');"
 #RUN cp composer.phar /usr/bin/composer  && composer global require drush/drush
 #use this if you want specific versions --- Check default matrix compatibility 
 #RUN cp composer.phar /usr/bin/composer  && composer global require drush/drush:"${DRUSH_VERSION}" 
-#RUN cp composer.phar /usr/bin/composer  && composer global require drush/drush:"$DRUSH_VERSION" 
-# The following has been added to install drush globally....
-# So you shold be able to just run Drush directly instead of /root/.composer/vendor/bin/drush
-RUN cp  composer.phar /usr/local/bin/composer && \
-    ln -s /usr/local/bin/composer /usr/bin/composer && \
-    git clone https://github.com/drush-ops/drush.git /usr/local/src/drush && \ 
-    cd /usr/local/src/drush && \
-    git checkout 7.4.0  && \
-    ln -s /usr/local/src/drush/drush /usr/bin/drush && \
-    composer install && drush --version
-RUN usermod -u 495 www-data && \
-    groupmod -g 495 www-data && \
-    find /var/www -user 33 -exec chown -h 495 {} \;  && \
-    find /var/www -group 33 -exec chgrp -h 495 {} \; && \
-    usermod -g www-data www-data 
+RUN cp composer.phar /usr/bin/composer  && composer global require drush/drush:"$DRUSH_VERSION" 
 RUN set -ex; \
 # gpg: key 5072E1F5: public key "MySQL Release Engineering <mysql-build@oss.oracle.com>" imported
 key='A4A9406876FCBD3C456770C88C718D3B5072E1F5'; \
@@ -74,5 +60,4 @@ gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
 gpg --export "$key" > /etc/apt/trusted.gpg.d/mysql.gpg; \
 rm -r "$GNUPGHOME"; \
 apt-key list > /dev/null
-WORKDIR /var/www/html
 CMD ["docker-php-entrypoint", "/usr/sbin/apache2ctl","-D FOREGROUND"]
