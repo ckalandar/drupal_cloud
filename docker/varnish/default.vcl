@@ -5,8 +5,8 @@ import std;
 import directors;
 
 backend default { # Define one backend
-  .host = "52.221.127.177";    # IP or Hostname of backend
-  .port = "8000";           # Port Apache or whatever is listening
+  .host = "drupal";    # IP or Hostname of backend
+  .port = "80";           # Port Apache or whatever is listening
   .max_connections = 300; # That's it
 
 

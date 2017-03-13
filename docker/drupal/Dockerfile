@@ -9,7 +9,6 @@ ENV MYSQL_MAJOR 5.72
 ENV MYSQL_VERSION 5.7.17-1debian8
 ENV DRUSH_VERSION 7.4.0 
 RUN a2enmod rewrite
-
 # install the PHP extensions we need
 RUN set -ex \
 && buildDeps=' \
@@ -30,11 +29,7 @@ libpq5 \
 && apt-get update && apt-get install -y git vim  \
 && apt-get purge -y --auto-remove $buildDeps
 
-#The following has been changed to /tmp to keep /var/www/html empty.. 
-#WORKDIR /tmp/html
-#Uncomment this if you want basic install...volumes will still work... 
 WORKDIR /var/www/html
-
 # https://www.drupal.org/node/3060/release
 ENV DRUPAL_VERSION 7.54
 ENV DRUPAL_MD5 3068cbe488075ae166e23ea6cd29cf0f
@@ -64,8 +59,6 @@ RUN cp  composer.phar /usr/local/bin/composer && \
     composer install && drush --version
 RUN usermod -u 495 www-data && \
     groupmod -g 495 www-data && \
-    find /var/www -user 33 -exec chown -h 495 {} \;  && \
-    find /var/www -group 33 -exec chgrp -h 495 {} \; && \
     usermod -g www-data www-data 
 RUN set -ex; \
 # gpg: key 5072E1F5: public key "MySQL Release Engineering <mysql-build@oss.oracle.com>" imported
@@ -75,7 +68,9 @@ gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
 gpg --export "$key" > /etc/apt/trusted.gpg.d/mysql.gpg; \
 rm -r "$GNUPGHOME"; \
 apt-key list > /dev/null && apt-get clean
+#RUN cp -r ./html /var/www && cp -r ./html /tmp
 
 EXPOSE 80 22
+RUN ls -la /var/www/html 
 #Cleanup agt-get to reduce disk
 CMD ["docker-php-entrypoint", "/usr/sbin/apache2ctl","-D FOREGROUND"]

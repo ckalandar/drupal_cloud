@@ -21,10 +21,12 @@ V1.1.0   -> added vim to drupal/varnish containers
 V1.1.1   -> modified volumes and added server_init.sh
 V1.2.1   -> fixed varnish.. Removed probe section in default.vcl.
 V1.3.0   -> Updated misc volume changes.. Updated documentations
+V1.4.0   -> Fixed EFS volumes..
 	    
 
 TODO: 
 	Automate the install and links and auto generate the link files.. 
 	Add CF templates
 Issues: 
+	Checj synincg issue with Drupal installs on AMAZON AMI 
         Template does not work. 

@@ -5,7 +5,8 @@ services:
       context: ./mysql
       dockerfile: Dockerfile
     volumes:
-      - "/var/lib/mysql:/var/lib/mysql"
+      - /var/lib/mysql:/var/lib/mysql
+      - /efs:/efs
     restart: always
     ports:
     - "3306:3306" 
@@ -25,8 +26,7 @@ services:
       context: ./drupal
       dockerfile: Dockerfile
     volumes:
-      - /efs/files:/efs/files 
-      - /var/www:/var/www
+      - /efs:/efs
     restart: always
     ports:
       - "8000:80"
