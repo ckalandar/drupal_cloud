@@ -13,6 +13,7 @@ sudo find /var/www -exec chgrp -h 495 {} \;
 # create and link files.. 
 sudo mkdir -p /efs/files
 sudo chown -R www-data:www-data /efs/files
+#This is not required... 
 ln -s /efs/files /var/www/html/files 
 #Kill all ids.. 
 ~/drupal_cloud_formation/docker/scripts/kill_all.sh 

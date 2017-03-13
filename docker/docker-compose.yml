@@ -7,6 +7,8 @@ services:
     volumes:
       - "/var/lib/mysql:/var/lib/mysql"
     restart: always
+    ports:
+    - "3306:3306" 
     environment:
       MYSQL_ROOT_PASSWORD: some_password
       MYSQL_DATABASE: drupal
@@ -23,7 +25,8 @@ services:
       context: ./drupal
       dockerfile: Dockerfile
     volumes:
-      - /efs/files:/var/www/html/files
+      - /efs/files:/efs/files 
+      - /var/www:/var/www
     restart: always
     ports:
       - "8000:80"
