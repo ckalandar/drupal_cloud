@@ -23,7 +23,7 @@ services:
       context: ./drupal
       dockerfile: Dockerfile
     volumes:
-      - /var/www/html/files
+      - /efs/files:/var/www/html/files
     restart: always
     ports:
       - "8000:80"
