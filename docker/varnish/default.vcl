@@ -4,49 +4,11 @@ vcl 4.0;
 import std;
 import directors;
 
-backend server1 { # Define one backend
-  .host = "drupal";    # IP or Hostname of backend
-  .port = "80";           # Port Apache or whatever is listening
-  .max_connections = 300; # That's it
-
-  .probe = {
-    #.url = "/"; # short easy way (GET /)
-    # We prefer to only do a HEAD /
-    .request =
-      "HEAD / HTTP/1.1"
-      "Host: drupal"
-      "Connection: close"
-      "User-Agent: Varnish Health Probe";
-
-    .interval  = 5s; # check the health of each backend every 5 seconds
-    .timeout   = 1s; # timing out after 1 second.
-    .window    = 5;  # If 3 out of the last 5 polls succeeded the backend is considered healthy, otherwise it will be marked as sick
-    .threshold = 3;
-  }
-
-  .first_byte_timeout     = 300s;   # How long to wait before we receive a first byte from our backend?
-  .connect_timeout        = 5s;     # How long to wait for a backend connection?
-  .between_bytes_timeout  = 2s;     # How long to wait between bytes received from our backend?
-}
-backend server2 { # Define one backend
-  .host = "ec2-54-169-132-41.ap-southeast-1.compute.amazonaws.com";    # IP or Hostname of backend
+backend default { # Define one backend
+  .host = "52.221.127.177";    # IP or Hostname of backend
   .port = "8000";           # Port Apache or whatever is listening
   .max_connections = 300; # That's it
 
-  .probe = {
-    #.url = "/"; # short easy way (GET /)
-    # We prefer to only do a HEAD /
-    .request =
-      "HEAD / HTTP/1.1"
-      "Host: ec2-54-169-132-41.ap-southeast-1.compute.amazonaws.com"
-      "Connection: close"
-      "User-Agent: Varnish Health Probe";
-
-    .interval  = 5s; # check the health of each backend every 5 seconds
-    .timeout   = 1s; # timing out after 1 second.
-    .window    = 5;  # If 3 out of the last 5 polls succeeded the backend is considered healthy, otherwise it will be marked as sick
-    .threshold = 3;
-  }
 
   .first_byte_timeout     = 300s;   # How long to wait before we receive a first byte from our backend?
   .connect_timeout        = 5s;     # How long to wait for a backend connection?
@@ -74,8 +36,7 @@ sub vcl_init {
   # Typically used to initialize VMODs.
 
   new vdir = directors.round_robin();
-  vdir.add_backend(server1);
-  vdir.add_backend(server2);
+  vdir.add_backend(default);
   # vdir.add_backend(server...);
   # vdir.add_backend(servern);
 }
@@ -86,7 +47,16 @@ sub vcl_recv {
   # which backend to use.
   # also used to modify the request
 
-  set req.backend_hint = vdir.backend(); # send all traffic to the vdir director
+
+  #set req.http.X-Real-Forwarded-For = regsub(client.ip, ":.*", "");
+  #set req.http.X-Forwarded-For = regsub(client.ip, ":.*", "");
+
+  #if (req.http.host ~ "compute.amazonaws.com") {
+        set req.backend_hint = default;
+  #  } 
+  #else { 
+  #set req.backend_hint = vdir.backend(); # send all traffic to the vdir director
+#}
 
   # Normalize the header, remove the port (in case you're testing this on various TCP ports)
   set req.http.Host = regsub(req.http.Host, ":[0-9]+", "");
@@ -231,7 +201,7 @@ sub vcl_pipe {
   # here.  It is not set by default as it might break some broken web
   # applications, like IIS with NTLM authentication.
 
-  # set bereq.http.Connection = "Close";
+  set bereq.http.Connection = "Close";
 
   # Implementing websocket support (https://www.varnish-cache.org/docs/4.0/users-guide/vcl-example-websockets.html)
   if (req.http.upgrade) {

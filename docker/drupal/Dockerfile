@@ -8,7 +8,6 @@ ENV MYSQL_HOST 172.17.0.2
 ENV MYSQL_MAJOR 5.72
 ENV MYSQL_VERSION 5.7.17-1debian8
 ENV DRUSH_VERSION 7.4.0 
-EXPOSE 80 22 
 RUN a2enmod rewrite
 
 # install the PHP extensions we need
@@ -32,7 +31,9 @@ libpq5 \
 && apt-get purge -y --auto-remove $buildDeps
 
 #The following has been changed to /tmp to keep /var/www/html empty.. 
-WORKDIR /tmp/html
+#WORKDIR /tmp/html
+#Uncomment this if you want basic install...volumes will still work... 
+WORKDIR /var/www/html
 
 # https://www.drupal.org/node/3060/release
 ENV DRUPAL_VERSION 7.54
@@ -73,6 +74,8 @@ export GNUPGHOME="$(mktemp -d)"; \
 gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
 gpg --export "$key" > /etc/apt/trusted.gpg.d/mysql.gpg; \
 rm -r "$GNUPGHOME"; \
-apt-key list > /dev/null
-WORKDIR /var/www/html
+apt-key list > /dev/null && apt-get clean
+
+EXPOSE 80 22
+#Cleanup agt-get to reduce disk
 CMD ["docker-php-entrypoint", "/usr/sbin/apache2ctl","-D FOREGROUND"]
