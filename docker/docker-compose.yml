@@ -1,9 +1,7 @@
 version: '2'
 services:
   db:
-    build:
-      context: ./mysql
-      dockerfile: Dockerfile
+    image: seshagirisriram/docker_mysql
     volumes:
       - "/var/lib/mysql:/var/lib/mysql"
       - "/efs:/efs"
@@ -22,11 +20,10 @@ services:
     depends_on:
     - db
   drupal:
-    build:
-      context: ./drupal
-      dockerfile: Dockerfile
+    image: seshagirisriram/docker_drupal
     volumes:
       - "/var/www:/var/www"
+      - "/efs:/efs"
     restart: always
     ports:
       - "8000:80"
@@ -39,9 +36,7 @@ services:
       - db
       - redis
   varnish:
-    build:
-      context: ./varnish
-      dockerfile: Dockerfile
+    image: seshagirisriram/docker_varnish
     ports:
     - "80:6081"
     depends_on:

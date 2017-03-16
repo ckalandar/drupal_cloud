@@ -23,6 +23,7 @@ V1.2.1   -> fixed varnish.. Removed probe section in default.vcl.
 V1.3.0   -> Updated misc volume changes.. Updated documentations
 V1.4.0   -> Fixed EFS volumes..
 V1.4.1   -> NFS issue is still unresolved. Bug reopened. 
+V1.4.2   -> Fixed NFS issue and mapping... Modified to use images from dockerhub instead of dockerfiles.. 
 	    
 
 TODO: 
