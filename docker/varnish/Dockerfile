@@ -9,6 +9,6 @@ RUN set -ex \
 git \
 vim \
 ' \
-&& apt-get update && apt-get install -y --no-install-recommends $buildDeps && rm -rf /var/lib/apt/lists/* 
+&& apt-get update && apt-get install -y --no-install-recommends $buildDeps && rm -rf /var/lib/apt/lists/* && ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
 EXPOSE 6081
 COPY default.vcl /etc/varnish/default.vcl

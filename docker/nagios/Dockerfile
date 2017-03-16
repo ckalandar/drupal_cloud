@@ -204,7 +204,8 @@ ENV APACHE_LOG_DIR /var/log/apache2
 
 #Set ServerName for Apache
 RUN echo "ServerName nagiosdocker" > /etc/apache2/conf-available/servername.conf	&& \
-    ln -s /etc/apache2/conf-available/servername.conf /etc/apache2/conf-enabled/servername.conf
+    ln -s /etc/apache2/conf-available/servername.conf /etc/apache2/conf-enabled/servername.conf && \
+   ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
 
 EXPOSE 80
 
