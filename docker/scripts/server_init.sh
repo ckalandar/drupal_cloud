@@ -23,5 +23,7 @@ sudo chown -R www-data:www-data /var/www
 $HOME/drupal_cloud_formation/docker/scripts/kill_all.sh
 docker-compose -f $HOME/drupal_cloud_formation/docker/docker-compose.yml  up -d  
 #cp -r /tmp/html /var/www
+# at this point of time, if you see nothins under /var/www/html, the and only then 
+# cp -r /install_dir/* /var/www/html && chown -R www-data:www-data /var/www
 echo "Done" 
 #rm -rf /tmp/html

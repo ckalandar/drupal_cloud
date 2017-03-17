@@ -20,7 +20,7 @@ libpq-dev \
 && docker-php-ext-configure gd \
 --with-jpeg-dir=/usr \
 --with-png-dir=/usr \
-&& docker-php-ext-install -j "$(nproc)" gd mbstring pdo pdo_mysql pdo_pgsql zip bcmath calendar ctype dba gd iconv json mbstring mysql mysqli opcache pdo pdo_mysql pdo_pgsql pgsql phar \
+&& docker-php-ext-install -j "$(nproc)" gd mbstring pdo pdo_mysql pdo_pgsql zip bcmath bz2 calendar ctype curl dba dom enchant exif fileinfo filter ftp gd gettext gmp hash iconv imap interbase intl json ldap mbstring mcrypt mssql mysql mysqli oci8 odbc opcache pcntl pdo pdo_dblib pdo_firebird pdo_mysql pdo_oci pdo_odbc pdo_pgsql pdo_sqlite pgsql phar posix pspell readline recode reflection session shmop simplexml snmp soap sockets spl standard sybase_ct sysvmsg sysvsem sysvshm tidy tokenizer wddx xml xmlreader xmlrpc xmlwriter xsl zip \ 
 && apt-mark manual \
 libjpeg62-turbo \
 libpq5 \
@@ -28,7 +28,7 @@ libpq5 \
 && ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime  \
 && apt-get purge -y --auto-remove $buildDeps
 
-WORKDIR /install_dir
+WORKDIR /var/www/html
 # https://www.drupal.org/node/3060/release
 ENV DRUPAL_VERSION 7.54
 ENV DRUPAL_MD5 3068cbe488075ae166e23ea6cd29cf0f
@@ -70,8 +70,7 @@ apt-key list > /dev/null && apt-get clean
 #RUN cp -r ./html /var/www && cp -r ./html /tmp
 
 EXPOSE 80 22
+RUN ls -la /var/www/html 
 #Cleanup agt-get to reduce disk
 VOLUME ["/var/www"]
-WORKDIR /var/www
-RUN  cp -r /install_dir /var/www/html && chown -R www-data:www-data /var/www
 CMD ["docker-php-entrypoint", "/usr/sbin/apache2ctl","-D FOREGROUND"]

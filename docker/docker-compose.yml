@@ -2,6 +2,7 @@ version: '2'
 services:
   db:
     image: seshagirisriram/docker_mysql
+    command: ["mysqld", "--character-set-server=utf8mb4","--collation-server=utf8mb4_unicode_ci"]
     volumes:
       - "/var/lib/mysql:/var/lib/mysql"
       - "/efs:/efs"
