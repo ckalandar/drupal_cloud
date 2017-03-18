@@ -26,6 +26,8 @@ V1.4.1   -> NFS issue is still unresolved. Bug reopened.
 V1.4.2   -> Fixed NFS issue and mapping... Modified to use images from dockerhub instead of dockerfiles.. 
 V1.4.3   -> PHP fixes, Mysql to enable UTF on startup via command  syntax, add
 settings.php for db connectivity under docker
+V1.4.4   ->  Supports and uses Mysql 5.6 as default, added scripts for staging
+code. 
 	    
 
 TODO: 
