@@ -25,6 +25,7 @@ services:
       - "/var/www:/var/www"
       - "/efs:/efs"
     restart: always
+    restart: always
     ports:
       - "8000:80"
     environment:

@@ -26,7 +26,7 @@ libjpeg62-turbo \
 libpq5 \
 && apt-get update && apt-get install -y git vim  \
 && ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime  \
-&& apt-get purge -y --auto-remove $buildDeps
+&& apt-get purge -y --auto-remove $buildDeps && apt-get -y install nfs-common nfs-client
 
 WORKDIR /install_dir
 # https://www.drupal.org/node/3060/release
@@ -36,8 +36,7 @@ ENV DRUPAL_MD5 3068cbe488075ae166e23ea6cd29cf0f
 RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz \
 && echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c - \
 && tar -xz --strip-components=1 -f drupal.tar.gz \
-&& rm drupal.tar.gz \
-&& chown -R www-data:www-data sites
+&& rm drupal.tar.gz 
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 RUN php -r "if (hash_file('SHA384', 'composer-setup.php') === '669656bab3166a7aff8a7506b8cb2d1c292f042046c5a994c43155c0be6190fa0355160742ab2e1c88d40d5be660b410') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
@@ -67,11 +66,11 @@ gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
 gpg --export "$key" > /etc/apt/trusted.gpg.d/mysql.gpg; \
 rm -r "$GNUPGHOME"; \
 apt-key list > /dev/null && apt-get clean
-#RUN cp -r ./html /var/www && cp -r ./html /tmp
+RUN mkdir -p /install_dir/sites/default
+ADD settings.php /install_dir/sites/default
 
 EXPOSE 80 22
 #Cleanup agt-get to reduce disk
-VOLUME ["/var/www"]
 WORKDIR /var/www
-RUN  cp -r /install_dir /var/www/html && chown -R www-data:www-data /var/www
+RUN  cp -r /install_dir/* /var/www/html && chown -R www-data:www-data /var/www
 CMD ["docker-php-entrypoint", "/usr/sbin/apache2ctl","-D FOREGROUND"]

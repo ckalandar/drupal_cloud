@@ -27,7 +27,7 @@ innodb_buffer_pool_size	8516534272
 
 key_buffer_size	20971520
 
-log_error	/var/lib/mysql/dev.mysql.err
+log_error	/var/www/logs/mysql/dev.mysql.err
 
 max_allowed_packet	104857600
 max_heap_table_size	33554432
@@ -44,7 +44,7 @@ read_rnd_buffer_size	524288
 
 slow_query_log	ON
 slow_query_log_always_write_time	10
-slow_query_log_file	/var/lib/mysql/dev.slow.log
+slow_query_log_file	/var/www/logs/mysql/dev.slow.log
 slow_query_log_timestamp_always	OFF
 slow_query_log_timestamp_precision	second
 
@@ -63,15 +63,4 @@ thread_statistics	OFF
 tmp_table_size	33554432
 tmpdir	/tmp/mysql
 # added from Neal 
-character_set_client utf8
-character_set_connection utf8
-character_set_database utf8
-character_set_filesystem binary
-character_set_results utf8
-character_set_server utf8
-character_set_system utf8
-character_sets_dir /usr/share/mysql/charsets/
-collation_connection utf8_general_ci
-collation_database utf8_general_ci
-collation_server utf8_general_ci
 max_allowed_packet=64M
