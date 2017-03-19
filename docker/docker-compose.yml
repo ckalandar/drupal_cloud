@@ -4,6 +4,7 @@ services:
     image: seshagirisriram/docker_mysql_56
     volumes:
       - "/var/lib/mysql:/var/lib/mysql"
+      - "/var/www:/var/www"
       - "/efs:/efs"
     restart: always
     ports:
