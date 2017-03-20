@@ -1,0 +1,19 @@
+FROM eeacms/varnish:latest
+MAINTAINER Maintained by IT Trailblazers
+#ENV ADDRESS_PORT 6081 
+#ENV ADMIN_PORT 6082 
+#ENV DNS_ENABLED false 
+#ENV BACKENDS ec2-52-77-233-238.ap-southeast-1.compute.amazonaws.com:8000
+ARG BACKEND_HOST 
+ARG BACKEND_PORT
+RUN set -ex \
+&& buildDeps=' \
+git \
+vim \
+' \
+&& apt-get update && apt-get install -y --no-install-recommends $buildDeps && rm -rf /var/lib/apt/lists/* && ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
+COPY default.vcl /etc/varnish/default.vcl
+COPY change_varnish.sh /tmp/change_varnish.sh
+RUN /tmp/change_varnish.sh $BACKEND_HOST $BACKEND_PORT
+RUN chown -R varnish:varnish /etc/varnish
+EXPOSE 6081
