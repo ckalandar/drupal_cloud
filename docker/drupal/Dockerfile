@@ -68,6 +68,7 @@ rm -r "$GNUPGHOME"; \
 apt-key list > /dev/null && apt-get clean
 RUN mkdir -p /install_dir/sites/default
 ADD settings.php /install_dir/sites/default
+ADD php.ini /usr/local/etc/php
 
 EXPOSE 80 22
 #Cleanup agt-get to reduce disk

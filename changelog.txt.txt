@@ -29,7 +29,7 @@ settings.php for db connectivity under docker
 V1.4.4   ->  Supports and uses Mysql 5.6 as default, added scripts for staging
 code. 
 V1.4.5   ->  Stripped down mysql yet agains...
-code. 
+V1.4.6   -> Added default php.ini and more variables
 	    
 
 TODO: 
