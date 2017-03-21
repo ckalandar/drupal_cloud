@@ -16,7 +16,8 @@ libjpeg62-turbo-dev \
 libpng12-dev \
 libpq-dev \
 ' \
-&& apt-get update && apt-get install -y --no-install-recommends $buildDeps && rm -rf /var/lib/apt/lists/* \
+&& apt-get update && apt-get install -y --no-install-recommends $buildDeps \
+&& rm -rf /var/lib/apt/lists/* \
 && docker-php-ext-configure gd \
 --with-jpeg-dir=/usr \
 --with-png-dir=/usr \
@@ -26,8 +27,8 @@ libjpeg62-turbo \
 libpq5 \
 && apt-get update && apt-get install -y git vim  \
 && ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime  \
-&& apt-get purge -y --auto-remove $buildDeps && apt-get -y install nfs-common nfs-client
-
+&& apt-get purge -y --auto-remove $buildDeps && apt-get -y install nfs-common nfs-client \
+&& rm -rf /var/lib/apt/lists/* 
 WORKDIR /install_dir
 # https://www.drupal.org/node/3060/release
 ENV DRUPAL_VERSION 7.54
@@ -67,6 +68,11 @@ gpg --export "$key" > /etc/apt/trusted.gpg.d/mysql.gpg; \
 rm -r "$GNUPGHOME"; \
 apt-key list > /dev/null && apt-get clean
 RUN mkdir -p /install_dir/sites/default
+RUN mv /etc/apache2/sites-enabled /etc/apache2/sites-enabled-orig \ 
+   &&  mkdir -p /var/www/sites-enabled && chown -R www-data:www-data /var/www \
+   &&  ln -s /var/www/sites-enabled/ /etc/apache2/sites-enabled
+
+#    && ln -s /var/www/sites-enabled/ /etc/apache2/sites-enabled
 ADD settings.php /install_dir/sites/default
 ADD php.ini /usr/local/etc/php
 
