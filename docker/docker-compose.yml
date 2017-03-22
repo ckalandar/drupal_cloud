@@ -31,9 +31,10 @@ services:
       - "8000:80"
     environment:
       MYSQL_ROOT_PASSWORD: some_password
-      MYSQL_DATABASE: drupal
-      MYSQL_USER: drupal
-      MYSQL_PASSWORD: drupal
+      DRUPAL_DB_NAME: drupal2
+      DRUPAL_DB_USER: drupal2
+      DRUPAL_DB_PASS: drupal2
+      DRUPAL_DB_HOST: drupal2
     links:
       - db
       - redis
