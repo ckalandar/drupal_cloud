@@ -68,12 +68,6 @@ gpg --export "$key" > /etc/apt/trusted.gpg.d/mysql.gpg; \
 rm -r "$GNUPGHOME"; \
 apt-key list > /dev/null && apt-get clean
 RUN mkdir -p /install_dir/sites/default
-RUN mv /etc/apache2/sites-enabled /etc/apache2/sites-enabled-orig \ 
-   &&  mkdir -p /var/www/sites-enabled \
-   && cp -r /etc/apache2/sites-enabled-orig/* /var/www/sites-enabled \
-   &&  chown -R www-data:www-data /var/www \
-   &&  ln -s /var/www/sites-enabled/ /etc/apache2/sites-enabled 
-
 #    && ln -s /var/www/sites-enabled/ /etc/apache2/sites-enabled
 ADD settings.php /install_dir/sites/default
 ADD php.ini /usr/local/etc/php
