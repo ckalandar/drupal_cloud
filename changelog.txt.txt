@@ -32,6 +32,7 @@ V1.4.5   ->  Stripped down mysql yet agains...
 V1.4.6   -> Some misc changes.s
 V1.4.7   -> Added default php.ini and more variables
 V1.5.0   -> Removed linkage to/from /etc/apache2/sites-enabled 
+V1.5.1   -> downgraded solr to 4.10.4 and using Jettty
 	    
 
 TODO: 
