@@ -1,5 +1,9 @@
 version: '2'
 services:
+  nagios:
+    image: seshagirisriram/docker_nagios
+    ports:
+    - "80:80"
   solr:
     image: seshagirisriram/docker_nagios
     ports:

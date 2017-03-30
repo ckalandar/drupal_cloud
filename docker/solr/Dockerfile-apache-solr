@@ -1,0 +1,3 @@
+FROM makuk66/docker-solr:4.10.4
+#RUN ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
+MAINTAINER Maintained by IT Trailblazers

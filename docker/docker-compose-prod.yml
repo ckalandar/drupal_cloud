@@ -1,0 +1,10 @@
+version: '2'
+services:
+  drupal:
+    image: ittbcontainers/docker_drupal
+    volumes:
+      - "/var/www:/var/www"
+      - "/efs:/efs"
+    restart: always
+    ports:
+      - "80:80"
