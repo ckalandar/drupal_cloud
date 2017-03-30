@@ -1,7 +1,7 @@
 version: '2'
 services:
   drupal:
-    image: ittbcontainers/docker_drupal
+    image: ittbcontainers/drupal-docker-prod
     volumes:
       - "/var/www:/var/www"
       - "/efs:/efs"

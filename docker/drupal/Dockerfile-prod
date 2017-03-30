@@ -68,7 +68,6 @@ gpg --export "$key" > /etc/apt/trusted.gpg.d/mysql.gpg; \
 rm -r "$GNUPGHOME"; \
 apt-key list > /dev/null && apt-get clean
 RUN mkdir -p /install_dir/sites/default
-#    && ln -s /var/www/sites-enabled/ /etc/apache2/sites-enabled
 ADD settings.php /install_dir/sites/default
 ADD php.ini /usr/local/etc/php
 
@@ -78,6 +77,7 @@ ADD copyfile.sh /bin/copyfile.sh
 ADD change_db.sh /bin/change_db.sh
 #RUN /bin/change_db.sh $DRUPAL_DB_NAME $DRUPAL_DB_USER $DRUPAL_DB_PASS $DRUPAL_DB_HOST
 RUN mkdir -p /etc/apache2/sites-enabled
+RUN cp -r /etc/apache2/sites-available /etc/apache2/sites-enabled
 #RUN  cp -r /install_dir/* /var/www/html && chown -R www-data:www-data /var/www
 RUN  chown -R www-data:www-data /var/www
 WORKDIR /var/www
