@@ -80,8 +80,9 @@ RUN mkdir -p /install_dir/sites/default
 ADD settings.php /install_dir/sites/default
 ADD php.ini /usr/local/etc/php
 
-EXPOSE 80 22
+EXPOSE 80 22 443 8081
 ADD copyfile.sh /bin/copyfile.sh
+ADD ports.conf /etc/apache2/ports.conf
 ADD change_db.sh /bin/change_db.sh
 RUN mkdir -p /etc/apache2/sites-enabled
 RUN  chown -R www-data:www-data /var/www
@@ -92,8 +93,8 @@ RUN echo extension=memcached.so >> /usr/local/etc/php/conf.d/memcached.ini
 RUN apt-get update && apt-get install -y wget && \
     echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list && \
     wget -O- https://download.newrelic.com/548C16BF.gpg | apt-key add - && \
-    apt-get update
-#    apt-get install -y newrelic-php5
+    apt-get update 
+    #apt-get install -y newrelic-php5
 #RUN newrelic-install install b5032d2754f96fe8b16a9f4b3d92c99b107d049c 
 
 RUN echo extension=/usr/lib/php5/20131226/memcache.so >> /usr/local/etc/php/conf.d/memcached.ini

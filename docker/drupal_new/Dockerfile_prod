@@ -78,7 +78,7 @@ RUN mv /etc/apache2/sites-enabled /etc/apache2/sites-enabled-orig \
 ADD settings.php /install_dir/sites/default
 ADD php.ini /usr/local/etc/php
 
-EXPOSE 80 22
+EXPOSE 80 22 443
 #Cleanup agt-get to reduce disk
 WORKDIR /var/www
 RUN  cp -r /install_dir/* /var/www/html && chown -R www-data:www-data /var/www
