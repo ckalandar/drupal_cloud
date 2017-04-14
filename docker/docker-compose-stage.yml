@@ -1,7 +1,7 @@
 version: '2'
 services:
   drupal:
-    image: ittbcontainers/docker_drupal:prod
+    image: ittbcontainers/docker_drupal:stage
     volumes:
       - "/var/www:/var/www"
       - "/efs:/efs"
@@ -9,4 +9,3 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8081:8081"

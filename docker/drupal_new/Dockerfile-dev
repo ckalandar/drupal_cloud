@@ -1,13 +1,15 @@
 FROM php:5.6-apache
 MAINTAINER Maintained by IT Trailblazers
 ENV MYSQL_ROOT_PASSWORD some_password
-ARG DRUPAL_DB_NAME
-ARG DRUPAL_DB_USER
-ARG DRUPAL_DB_PASS
-ARG DRUPAL_DB_HOST
+ENV DRUPAL_DB_NAME drupal
+ENV DRUPAL_DB_USER drupal
+ENV DRUPAL_DB_PASS drupal
+ENV DRUPAL_DB_HOST 172.17.0.2
 ENV MYSQL_MAJOR 5.72
 ENV MYSQL_VERSION 5.7.17-1debian8
 ENV DRUSH_VERSION 7.4.0 
+ENV DRUPAL_VERSION 7.54
+ENV DRUPAL_MD5 3068cbe488075ae166e23ea6cd29cf0f
 RUN a2enmod rewrite
 # install the PHP extensions we need
 RUN set -ex \
@@ -15,13 +17,16 @@ RUN set -ex \
 libjpeg62-turbo-dev \
 libpng12-dev \
 libpq-dev \
+libz-dev \
+libxml2-dev \
+libmemcached-dev \
 ' \
 && apt-get update && apt-get install -y --no-install-recommends $buildDeps \
 && rm -rf /var/lib/apt/lists/* \
 && docker-php-ext-configure gd \
 --with-jpeg-dir=/usr \
 --with-png-dir=/usr \
-&& docker-php-ext-install -j "$(nproc)" gd mbstring pdo pdo_mysql pdo_pgsql zip bcmath calendar ctype dba gd iconv json mbstring mysql mysqli opcache pdo pdo_mysql pdo_pgsql pgsql phar \
+&& docker-php-ext-install -j "$(nproc)" gd mbstring pdo pdo_mysql pdo_pgsql zip bcmath calendar ctype dba gd iconv json mbstring mysql mysqli opcache pdo pdo_mysql pdo_pgsql pgsql phar soap \
 && apt-mark manual \
 libjpeg62-turbo \
 libpq5 \
@@ -31,13 +36,13 @@ libpq5 \
 && rm -rf /var/lib/apt/lists/* 
 WORKDIR /install_dir
 # https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION 7.54
-ENV DRUPAL_MD5 3068cbe488075ae166e23ea6cd29cf0f
 
 RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz \
 && echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c - \
 && tar -xz --strip-components=1 -f drupal.tar.gz \
 && rm drupal.tar.gz 
+RUN apt-get update && apt-get install -y php-pear php5-dev libcurl3-openssl-dev
+RUN pecl install pecl_http-2.5.5
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 RUN php -r "if (hash_file('SHA384', 'composer-setup.php') === '669656bab3166a7aff8a7506b8cb2d1c292f042046c5a994c43155c0be6190fa0355160742ab2e1c88d40d5be660b410') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
@@ -45,7 +50,7 @@ RUN php composer-setup.php && php -r "unlink('composer-setup.php');"
 # Use this if you want the preferred DRUSH version..
 #RUN cp composer.phar /usr/bin/composer  && composer global require drush/drush
 #use this if you want specific versions --- Check default matrix compatibility 
-#RUN cp composer.phar /usr/bin/composer  && composer global require drush/drush:"${DRUSH_VERSION}" 
+#run cp composer.phar /usr/bin/composer  && composer global require drush/drush:"${DRUSH_VERSION}" 
 #RUN cp composer.phar /usr/bin/composer  && composer global require drush/drush:"$DRUSH_VERSION" 
 # The following has been added to install drush globally....
 # So you shold be able to just run Drush directly instead of /root/.composer/vendor/bin/drush
@@ -68,21 +73,22 @@ gpg --export "$key" > /etc/apt/trusted.gpg.d/mysql.gpg; \
 rm -r "$GNUPGHOME"; \
 apt-key list > /dev/null && apt-get clean
 RUN mkdir -p /install_dir/sites/default
-RUN mv /etc/apache2/sites-enabled /etc/apache2/sites-enabled-orig \ 
-   &&  mkdir -p /var/www/sites-enabled \
-   && cp -r /etc/apache2/sites-enabled-orig/* /var/www/sites-enabled \
-   &&  chown -R www-data:www-data /var/www \
-   &&  ln -s /var/www/sites-enabled/ /etc/apache2/sites-enabled 
-
-#    && ln -s /var/www/sites-enabled/ /etc/apache2/sites-enabled
 ADD settings.php /install_dir/sites/default
 ADD php.ini /usr/local/etc/php
 
-EXPOSE 80 22 443
-#Cleanup agt-get to reduce disk
-WORKDIR /var/www
-RUN  cp -r /install_dir/* /var/www/html && chown -R www-data:www-data /var/www
+EXPOSE 80 22
 ADD copyfile.sh /bin/copyfile.sh
+ADD ports.conf /etc/apache2/ports.conf
 ADD change_db.sh /bin/change_db.sh
-RUN /bin/change_db.sh $DRUPAL_DB_NAME $DRUPAL_DB_USER $DRUPAL_DB_PASS $DRUPAL_DB_HOST
+RUN  chown -R www-data:www-data /var/www
+RUN apt-get update && apt-get install -y \
+    imagemagick php5-memcache php-soap php-http  php5-mcrypt  php5-imagick \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* 
+RUN echo extension=memcached.so >> /usr/local/etc/php/conf.d/memcached.ini
+RUN echo extension=/usr/lib/php5/20131226/memcache.so >> /usr/local/etc/php/conf.d/memcached.ini
+RUN echo extension=http.so >> /usr/local/etc/php/conf.d/http.ini
+RUN echo extension=/usr/lib/php5/20131226/imagick.so >> /usr/local/etc/php/conf.d/imagick.ini
+RUN echo extension=/usr/lib/php5/20131226/mcrypt.so >> /usr/local/etc/php/conf.d/mcrypt.ini
+
+WORKDIR /var/www
 CMD ["docker-php-entrypoint", "/usr/sbin/apache2ctl","-D FOREGROUND"]
