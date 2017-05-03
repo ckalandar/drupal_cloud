@@ -14,12 +14,6 @@ services:
       MYSQL_DATABASE: drupal
       MYSQL_USER: drupal
       MYSQL_PASSWORD: drupal
-  redis:
-    image: redis:3.0
-    ports:
-    - "6379"
-    depends_on:
-    - db
   drupal:
     image: ittbcontainers/docker_drupal:dev
     volumes:
@@ -37,7 +31,6 @@ services:
       DRUPAL_DB_HOST: drupal
     links:
       - db
-      - redis
   varnish:
     image: ittbcontainers/docker_varnish
     ports:
