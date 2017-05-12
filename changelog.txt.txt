@@ -42,5 +42,3 @@ V1.6.2   ->  Updated stage/prod with same
 TODO: 
 	Automate the install and links and auto generate the link files.. 
 	Add CF templates
-Issues: 
-        Template does not work. 
