@@ -11,6 +11,8 @@ ENV DRUSH_VERSION 7.4.0
 ENV DRUPAL_VERSION 7.54
 ENV DRUPAL_MD5 3068cbe488075ae166e23ea6cd29cf0f
 RUN a2enmod rewrite
+RUN a2enmod expires
+RUN a2enmod headers
 # install the PHP extensions we need
 RUN set -ex \
 && buildDeps=' \

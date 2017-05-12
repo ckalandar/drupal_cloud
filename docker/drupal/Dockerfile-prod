@@ -11,6 +11,8 @@ ENV DRUSH_VERSION 7.4.0
 ENV NR_INSTALL_SILENT true
 ENV NR_INSTALL_KEY b5032d2754f96fe8b16a9f4b3d92c99b107d049c
 RUN a2enmod rewrite
+RUN a2enmod expires
+RUN a2enmod headers
 RUN unlink /etc/apache2/sites-enabled/000-default.conf
 RUN mkdir -p /etc/apace2/sites-enabled
 # install the PHP extensions we need
@@ -91,7 +93,6 @@ RUN  chown -R www-data:www-data /var/www
 RUN apt-get update && apt-get install -y \
     imagemagick php5-memcache php-soap php-http  php5-mcrypt  php5-imagick \
     && rm -rf /var/lib/apt/lists/* 
-RUN echo extension=memcached.so >> /usr/local/etc/php/conf.d/memcached.ini
 RUN apt-get update && apt-get install -y wget && \
     echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list && \
     wget -O- https://download.newrelic.com/548C16BF.gpg | apt-key add - && \

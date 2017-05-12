@@ -37,6 +37,7 @@ V1.6.0   -> Final Prod releases and tagging builds and auto-enabling new relic i
 
 V1.6.1   -> Minor changes for dev
 V1.6.2   ->  Updated stage/prod with same
+V1.6.3   ->  fixed minor issues with file format and added support for headers/expires module
 	    
 
 TODO: 
