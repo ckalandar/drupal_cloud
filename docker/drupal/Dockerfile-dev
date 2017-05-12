@@ -19,6 +19,7 @@ libpng12-dev \
 libpq-dev \
 libz-dev \
 libxml2-dev \
+libpcre3-dev \
 libmemcached-dev \
 ' \
 && apt-get update && apt-get install -y --no-install-recommends $buildDeps \
