@@ -8,11 +8,9 @@ ENV DRUPAL_DB_HOST 172.17.0.2
 ENV MYSQL_MAJOR 5.72
 ENV MYSQL_VERSION 5.7.17-1debian8
 ENV DRUSH_VERSION 7.4.0 
-ENV NR_INSTALL_SILENT true
-ENV NR_INSTALL_KEY b5032d2754f96fe8b16a9f4b3d92c99b107d049c
+ENV DRUPAL_VERSION 7.54
+ENV DRUPAL_MD5 3068cbe488075ae166e23ea6cd29cf0f
 RUN a2enmod rewrite
-RUN unlink /etc/apache2/sites-enabled/000-default.conf
-RUN mkdir -p /etc/apace2/sites-enabled
 # install the PHP extensions we need
 RUN set -ex \
 && buildDeps=' \
@@ -38,8 +36,6 @@ libpq5 \
 && rm -rf /var/lib/apt/lists/* 
 WORKDIR /install_dir
 # https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION 7.54
-ENV DRUPAL_MD5 3068cbe488075ae166e23ea6cd29cf0f
 
 RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz \
 && echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c - \
@@ -79,28 +75,17 @@ apt-key list > /dev/null && apt-get clean
 RUN mkdir -p /install_dir/sites/default
 ADD settings.php /install_dir/sites/default
 ADD php.ini /usr/local/etc/php
-ADD newrelic.ini /usr/local/etc/php/conf.d
 
-EXPOSE 80 22 443 8081
+EXPOSE 80 22
 ADD copyfile.sh /bin/copyfile.sh
 ADD ports.conf /etc/apache2/ports.conf
 ADD change_db.sh /bin/change_db.sh
-RUN mkdir -p /etc/apache2/sites-enabled
 RUN  chown -R www-data:www-data /var/www
 RUN apt-get update && apt-get install -y \
-    imagemagick php5-memcache php-soap php-http  php5-mcrypt  php5-imagick \
-    && rm -rf /var/lib/apt/lists/* 
-RUN echo extension=memcached.so >> /usr/local/etc/php/conf.d/memcached.ini
-RUN apt-get update && apt-get install -y wget && \
-    echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list && \
-    wget -O- https://download.newrelic.com/548C16BF.gpg | apt-key add - && \
-    apt-get update 
-ADD newrelic.ini /usr/local/etc/php/conf.d/
-RUN    DEBIAN_FRONTEND=noninteractive apt-get -y install newrelic-php5 && \
-        newrelic-install install b5032d2754f96fe8b16a9f4b3d92c99b107d049c 
-
+    imagemagick php5-memcache php-soap php-http  php5-mcrypt  php5-imagick dnsutils \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* 
 RUN echo extension=/usr/lib/php5/20131226/memcache.so >> /usr/local/etc/php/conf.d/memcached.ini
-RUN echo extension=http.so >> /usr/local/etc/php/conf.d/http.ini
+#RUN echo extension=http.so >> /usr/local/etc/php/conf.d/http.ini
 RUN echo extension=/usr/lib/php5/20131226/imagick.so >> /usr/local/etc/php/conf.d/imagick.ini
 RUN echo extension=/usr/lib/php5/20131226/mcrypt.so >> /usr/local/etc/php/conf.d/mcrypt.ini
 
