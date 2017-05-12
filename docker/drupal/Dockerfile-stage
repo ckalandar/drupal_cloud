@@ -19,6 +19,7 @@ libpng12-dev \
 libpq-dev \
 libz-dev \
 libxml2-dev \
+libpcre3-dev \
 libmemcached-dev \
 ' \
 && apt-get update && apt-get install -y --no-install-recommends $buildDeps \
@@ -86,7 +87,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean && rm -rf /var/lib/apt/lists/* 
 RUN echo extension=memcached.so >> /usr/local/etc/php/conf.d/memcached.ini
 RUN echo extension=/usr/lib/php5/20131226/memcache.so >> /usr/local/etc/php/conf.d/memcached.ini
-RUN echo extension=http.so >> /usr/local/etc/php/conf.d/http.ini
+#RUN echo extension=http.so >> /usr/local/etc/php/conf.d/http.ini
 RUN echo extension=/usr/lib/php5/20131226/imagick.so >> /usr/local/etc/php/conf.d/imagick.ini
 RUN echo extension=/usr/lib/php5/20131226/mcrypt.so >> /usr/local/etc/php/conf.d/mcrypt.ini
 

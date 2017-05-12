@@ -1,7 +1,7 @@
 version: '2'
 services:
   db:
-    image: ittbcontainers/docker_mysql_56
+    image: seshagirisriram/docker_mysql_56
     volumes:
       - "/var/lib/mysql:/var/lib/mysql"
       - "/var/www:/var/www"
@@ -15,7 +15,7 @@ services:
       MYSQL_USER: drupal
       MYSQL_PASSWORD: drupal
   drupal:
-    image: ittbcontainers/docker_drupal:dev
+    image: seshagirisriram/docker_drupal:dev
     volumes:
       - "/var/www:/var/www"
       - "/efs:/efs"
@@ -32,7 +32,7 @@ services:
     links:
       - db
   varnish:
-    image: ittbcontainers/docker_varnish
+    image: seshagirisriram/docker_varnish
     ports:
     - "80:6081"
     depends_on:

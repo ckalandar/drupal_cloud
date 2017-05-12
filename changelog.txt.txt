@@ -36,6 +36,7 @@ V1.5.1   -> downgraded solr to 4.10.4 and using Jettty
 V1.6.0   -> Final Prod releases and tagging builds and auto-enabling new relic in prodction
 
 V1.6.1   -> Minor changes for dev
+V1.6.2   ->  Updated stage/prod with same
 	    
 
 TODO: 
